@@ -1,0 +1,36 @@
+name: Build and Upload Artifact (构建并上传产物)
+
+on:
+  # 允许手动触发此工作流，方便您随时构建
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository (检出代码)
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js (设置 Node.js 环境)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' 
+
+    - name: Install pnpm (安装 pnpm)
+      run: npm install -g pnpm
+
+    - name: Install dependencies (安装依赖)
+      run: pnpm install
+
+    - name: Build project (执行构建)
+      run: pnpm build
+
+    - name: Upload dist folder as Artifact (上传 dist 文件夹作为产物)
+      uses: actions/upload-artifact@v4
+      with:
+        # 产物的名称，稍后下载时会看到这个名字
+        name: treasure-navigation-build
+        # 要上传的文件夹/文件路径
+        path: dist/
+        retention-days: 7
